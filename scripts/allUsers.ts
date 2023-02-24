@@ -2,7 +2,7 @@
 import { allUsers } from '../src/all-users'
 
 const run = async () => {
-  const users = await allUsers()
+  const users = await allUsers('experts')
   console.log(users)
 }
 
