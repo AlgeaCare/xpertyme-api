@@ -1,4 +1,8 @@
-import { allUsers } from './all-users'
+import { users } from './reporting/users'
 
-// control what we import and export from this lib
-export { allUsers }
+// make a list of all the apis and combine them all into one export
+const reporting = {
+  users
+}
+
+export { reporting }

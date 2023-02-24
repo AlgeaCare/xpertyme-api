@@ -1,9 +1,9 @@
-import { xpertymeApi } from './api'
-import { definitions } from '../schemas/user/schema'
+import { xpertymeApi } from '../api'
+import { definitions } from '../../schemas/reporting/schema'
 
 type UserType = 'all' | 'experts' | 'client'
 
-export const allUsers = async (userType: UserType = 'all') => {
+export const users = async (userType: UserType = 'all') => {
   const apiCall = await xpertymeApi(
     `reportingManager/v0/users?usersType=${userType}`
   )
