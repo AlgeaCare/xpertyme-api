@@ -3,7 +3,6 @@
     "rootDir": "./",
     "outDir": "./dist",
     "module": "CommonJS",
-    "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -18,8 +17,8 @@
     "stripInternal": true,
     "target": "ES2018",
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "declaration": true
   },
-  "include": ["./src"]
+  "include": ["./src/**/*", "./schemas/**/*"],
+  "exclude": ["**/*.test.ts"]
 }

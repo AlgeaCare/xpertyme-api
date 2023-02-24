@@ -1,6 +1,6 @@
 {
   "name": "@algea_care/xpertyme-api",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Just a little lib for the xpertyme api",
   "preversion": "npm run build",
   "main": "dist/src/index.js",
@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/AlgeaCare/xpertyme-api.git"
   },
-  "author": "",
+  "author": "Gareth Fuller",
   "license": "LICENCE",
   "bugs": {
     "url": "https://github.com/AlgeaCare/xpertyme-api/issues"

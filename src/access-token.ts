@@ -37,8 +37,9 @@ export const getAccessToken = async () => {
 
     // set when we last requested to now
     lastRequested = new Date()
+
     const tokenResponse = await wretch(
-      `${xpertyme.apiDomain}/'auth/realms/algeacare/protocol/openid-connect/token'`
+      `${xpertyme.apiDomain}/auth/realms/algeacare/protocol/openid-connect/token`
     )
       .auth(`Basic ${encodedKey()}`)
       .headers({
@@ -55,6 +56,8 @@ export const getAccessToken = async () => {
     }
     // set the token for the next request
     token = tokenResponse
+
+    console.log(token.access_token)
 
     return token.access_token
   }
