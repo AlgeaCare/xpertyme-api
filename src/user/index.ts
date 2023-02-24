@@ -1,1 +1,1 @@
-export const apiRoot = 'userManager/v0/'
+export const apiRoot = 'userManager/v0'
