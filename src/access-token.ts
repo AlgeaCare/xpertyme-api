@@ -57,8 +57,6 @@ export const getAccessToken = async () => {
     // set the token for the next request
     token = tokenResponse
 
-    console.log(token.access_token)
-
     return token.access_token
   }
   return token.access_token
