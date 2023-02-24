@@ -1,0 +1,997 @@
+swagger: '2.0'
+info:
+  title: Calendar Manager API
+  version: 0.0.1
+paths:
+  /api/calendarManager/v0/{calendar}/events/:
+    post:
+      summary: Create calendar event
+      description: Create calendar event
+      parameters:
+        - name: form
+          in: body
+          schema:
+            $ref: '#/definitions/CreatePersonalCalendarEventFormType'
+        - name: calendar
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            $ref: '#/definitions/PersonalCalendarEvent'
+      tags:
+        - Calendar Events
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/serviceTypes:
+    get:
+      summary: Get service types
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            items:
+              properties:
+                code:
+                  description: Code of service type
+                  type: string
+              type: object
+            type: array
+      tags:
+        - Service Types
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/{calendar}/events/{personalCalendarEvent}/cancel:
+    post:
+      summary: Cancel calendar event
+      parameters:
+        - name: form
+          in: body
+          schema:
+            $ref: '#/definitions/CalendarEventCancelFormType'
+        - name: calendar
+          in: path
+          required: true
+          type: string
+        - name: personalCalendarEvent
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            $ref: '#/definitions/PersonalCalendarEvent2'
+      tags:
+        - Calendar Events
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/{calendar}/events/{personalCalendarEvent}/confirm:
+    post:
+      summary: Confirm calendar event
+      parameters:
+        - name: form
+          in: body
+          schema:
+            $ref: '#/definitions/CalendarEventConfirmFormType'
+        - name: calendar
+          in: path
+          required: true
+          type: string
+        - name: personalCalendarEvent
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            $ref: '#/definitions/PersonalCalendarEvent'
+      tags:
+        - Calendar Events
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/{calendar}/event:
+    post:
+      summary: Create calendar event
+      description: |-
+        After execution the chosen timeslot will be reserved for some amount of time. After this time
+            the event will be removed in case it is still unconfirmed. If the same slot is reserved by other request, an error
+            code 400 is thrown.
+      parameters:
+        - name: body
+          in: body
+          schema:
+            required:
+              - serviceType
+              - startDate
+              - visitReasonTemplate
+            properties:
+              serviceType:
+                description: Service type code
+                type: string
+              startDate:
+                description: Timeslot start time string (yyyy-MM-dd\'T\'HH:mm:ssXXX)
+                type: string
+              visitReasonTemplate:
+                description: Visit reason template UUID
+                type: string
+            type: object
+        - name: calendar
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            properties:
+              id:
+                description: Unique number id of calendar event
+                type: string
+              serviceTypeCodes:
+                description: service type codes
+                items:
+                  type: string
+                type: array
+              startDate:
+                description: Start date string format Y-m-d H:i:s UTC
+                type: string
+              endDate:
+                description: End date string format Y-m-d H:i:s UTC
+                type: string
+              pause:
+                description: pause number in seconds of calendar event
+                type: integer
+              status:
+                description: status number of calendar event
+                type: integer
+              isForFirstConsultation:
+                description: mark about first consultatiom of calendar event
+                type: boolean
+              reservationDuration:
+                description: Timeslot reservation time interval in minutes
+                type: integer
+              reservationEndTime:
+                description: Timeslot reservation end time, format Y-m-d H:i:s UTC
+                type: string
+            type: object
+      tags:
+        - Calendar Events
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/history:
+    get:
+      summary: Get the history list of calendars event for seeker
+      parameters:
+        - name: email
+          in: query
+          allowEmptyValue: false
+          required: true
+          description: Seeker email
+          type: string
+        - name: page
+          in: query
+          allowEmptyValue: false
+          required: true
+          description: Page number
+          type: integer
+        - name: perPage
+          in: query
+          allowEmptyValue: false
+          required: true
+          description: Number of entries per page
+          type: integer
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            properties:
+              total:
+                description: Total entries found
+                type: integer
+              page:
+                description: Page number
+                type: integer
+              perPage:
+                description: Items per page
+                type: integer
+              events:
+                items:
+                  description: Personal calenadr event
+                  properties:
+                    expert:
+                      $ref: '#/definitions/User'
+                    id:
+                      description: Calendar event ID
+                      type: string
+                    noShow:
+                      description: Calendar event noShow flag
+                      type: boolean
+                    startDate:
+                      description: Start date string format Y-m-d H:i:s UTC
+                      type: string
+                    status:
+                      description: Calendar event status
+                      type: integer
+                      enum:
+                        - 0 - created
+                        - 1 - canceled
+                        - 2 - active
+                        - 3 - finished
+                    members:
+                      description: Calendar event members
+                      items:
+                        $ref: '#/definitions/CalendarEventMember'
+                      type: array
+                    visitReason:
+                      description: Calendar event visit reason
+                      properties:
+                        formatType:
+                          description: Appointment format type
+                          type: integer
+                          enum:
+                            - 1 - online
+                            - 2 - offline
+                            - 3 - phone
+                      type: object
+                    notes:
+                      description: expert notes of event
+                      type: string
+                    eventSessionDetails:
+                      description: Calendar event's call details
+                      properties:
+                        dates:
+                          description: Event session dates details
+                          items:
+                            description: Translations
+                            properties:
+                              startDate:
+                                description: Start date string format Y-m-d H:i:s UTC
+                                type: string
+                              finishDate:
+                                description: Finish date string format Y-m-d H:i:s UTC
+                                type: string
+                              duration:
+                                description: Total passed seconds of the call
+                                type: integer
+                            type: object
+                          type: array
+                      type: object
+                  type: object
+                type: array
+      tags:
+        - Calendar Events
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/expertList:
+    get:
+      summary: Get list of available experts
+      parameters:
+        - name: dateBooking
+          in: query
+          required: true
+          description: Booking date (ISO 8601)
+          type: string
+        - name: serviceType
+          in: query
+          required: true
+          description: Service type code
+          type: string
+        - name: visitReasonTemplate
+          in: query
+          required: true
+          description: Visit reason template UUID
+          type: string
+        - name: categories[]
+          in: query
+          required: true
+          description: Category ids
+          type: integer
+        - name: organizationUuid
+          in: query
+          description: Organization UUID
+          type: string
+        - name: spokenLanguages[]
+          in: query
+          required: false
+          description: Spoken language ids
+          type: integer
+        - name: country
+          in: query
+          required: false
+          description: Country (ISO 3166-1 alpha-2)
+          type: string
+        - name: addressUuid
+          in: query
+          description: Address UUID
+          type: string
+        - name: address
+          in: query
+          required: false
+          description: Address
+          type: string
+        - name: radiusKm
+          in: query
+          required: false
+          description: Radius in kilometers
+          type: integer
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            items:
+              properties:
+                uuid:
+                  description: Unique number of expert user
+                  type: string
+                externalId:
+                  description: External ID, can be used to identify users by external applications
+                  type: string
+                firstName:
+                  description: First name of expert user
+                  type: string
+                lastName:
+                  description: Last name of expert user
+                  type: string
+                spokenLanguages:
+                  description: Spoken languages id numbers
+                  items:
+                    type: integer
+                  type: array
+                croppedPhoto:
+                  description: User photo link
+                  type: string
+                academicDegree:
+                  description: Expert's academic degree description
+                  type: string
+                calendarId:
+                  description: Expert's unique calendar id string
+                  type: string
+                salutation:
+                  properties:
+                    id:
+                      description: Salutation unique number
+                      type: number
+                    translations:
+                      items:
+                        properties:
+                          locale:
+                            description: Language code for salutation (ISO 639-1)
+                            type: string
+                          name:
+                            description: Salutation name
+                            type: string
+                      type: array
+                  type: object
+                academicTitle:
+                  properties:
+                    id:
+                      description: Academic title unique number
+                      type: number
+                    translations:
+                      items:
+                        properties:
+                          locale:
+                            description: Language code for academic title (ISO 639-1)
+                            type: string
+                          name:
+                            description: Academic title name
+                            type: string
+                      type: array
+                  type: object
+              type: object
+            type: array
+      tags:
+        - List of experts
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/{userUuid}/timeslots:
+    get:
+      summary: Get timeslots of single expert with global visit reasons
+      parameters:
+        - name: userUuid
+          in: path
+          required: true
+          description: Expert user UUID
+          type: string
+        - name: addressUuid
+          in: query
+          description: Address UUID
+          type: string
+        - name: dateStart
+          in: query
+          required: true
+          description: Start date (ISO 8601)
+          type: string
+        - name: dateEnd
+          in: query
+          required: true
+          description: End date (ISO 8601)
+          type: string
+        - name: serviceType
+          in: query
+          required: true
+          description: Service type code
+          type: string
+        - name: visitReasonTemplate
+          in: query
+          required: true
+          description: Visit reason template UUID
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            items:
+              properties:
+                timeSlots:
+                  items:
+                    properties:
+                      startTime:
+                        description: Timeslot start time string format Y-m-d H:i:s
+                        type: string
+                  type: array
+                date:
+                  description: Date string format Y-m-d H:i:s
+                  type: string
+            type: array
+      tags:
+        - Timeslots
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/randomExpert:
+    get:
+      summary: Get random available expert
+      parameters:
+        - name: dateBooking
+          in: query
+          required: true
+          description: Booking date (ISO 8601)
+          type: string
+        - name: serviceType
+          in: query
+          required: true
+          description: Service type code
+          type: string
+        - name: visitReasonTemplate
+          in: query
+          required: true
+          description: Visit reason template UUID
+          type: string
+        - name: categories[]
+          in: query
+          required: true
+          description: Category ids
+          type: integer
+        - name: organizationUuid
+          in: query
+          description: Organization UUID
+          type: string
+        - name: spokenLanguages[]
+          in: query
+          required: false
+          description: Spoken language ids
+          type: integer
+        - name: country
+          in: query
+          required: false
+          description: Country (ISO 3166-1 alpha-2)
+          type: string
+        - name: addressUuid
+          in: query
+          description: Address UUID
+          type: string
+        - name: address
+          in: query
+          required: false
+          description: Address
+          type: string
+        - name: radiusKm
+          in: query
+          required: false
+          description: Radius in kilometers
+          type: integer
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            properties:
+              uuid:
+                description: Unique number of expert user
+                type: string
+              externalId:
+                description: External ID, can be used to identify users by external applications
+                type: string
+              firstName:
+                description: First name of expert user
+                type: string
+              lastName:
+                description: Last name of expert user
+                type: string
+              spokenLanguages:
+                description: Spoken languages id numbers
+                items:
+                  type: integer
+                type: array
+              croppedPhoto:
+                description: User photo link
+                type: string
+              academicDegree:
+                description: Expert's academic degree description
+                type: string
+              calendarId:
+                description: Expert's unique calendar id string
+                type: string
+              salutation:
+                properties:
+                  id:
+                    description: Salutation unique number
+                    type: number
+                  translations:
+                    items:
+                      properties:
+                        locale:
+                          description: Language code for salutation (ISO 639-1)
+                          type: string
+                        name:
+                          description: Salutation name
+                          type: string
+                    type: array
+                type: object
+              academicTitle:
+                properties:
+                  id:
+                    description: Academic title unique number
+                    type: number
+                  translations:
+                    items:
+                      properties:
+                        locale:
+                          description: Language code for academic title (ISO 639-1)
+                          type: string
+                        name:
+                          description: Academic title name
+                          type: string
+                    type: array
+                type: object
+            type: object
+      tags:
+        - Random Expert
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/timeslots:
+    get:
+      summary: Get timeslots of experts with global visit reasons
+      parameters:
+        - name: dateStart
+          in: query
+          required: true
+          description: Start date (ISO 8601)
+          type: string
+        - name: dateEnd
+          in: query
+          required: true
+          description: End date (ISO 8601)
+          type: string
+        - name: serviceType
+          in: query
+          required: true
+          description: Service type code
+          type: string
+        - name: visitReasonTemplate
+          in: query
+          required: true
+          description: Visit reason template UUID
+          type: string
+        - name: categories[]
+          in: query
+          required: true
+          description: Category ids
+          type: integer
+        - name: organizationUuid
+          in: query
+          description: Organization UUID
+          type: string
+        - name: addressUuid
+          in: query
+          description: Address UUID
+          type: string
+        - name: spokenLanguages[]
+          in: query
+          required: false
+          description: Spoken language ids
+          type: integer
+        - name: country
+          in: query
+          required: false
+          description: Country (ISO 3166-1 alpha-2)
+          type: string
+        - name: address
+          in: query
+          required: false
+          description: Address
+          type: string
+        - name: radiusKm
+          in: query
+          required: false
+          description: Radius in kilometers
+          type: integer
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            items:
+              properties:
+                timeSlots:
+                  items:
+                    properties:
+                      startTime:
+                        description: Timeslot start time string format Y-m-d H:i:s
+                        type: string
+                  type: array
+                date:
+                  description: Date string format Y-m-d H:i:s
+                  type: string
+            type: array
+      tags:
+        - Timeslots
+      security:
+        - CalendarManagerApiClient: []
+  /api/calendarManager/v0/nba/visitReasonTemplates:
+    get:
+      summary: Get global appointment types
+      parameters:
+        - name: serviceType
+          in: query
+          required: true
+          description: Service type code
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            items:
+              properties:
+                serviceConfigurations:
+                  items:
+                    properties:
+                      code:
+                        description: Unique code of service type
+                        type: string
+                      consultationDuration:
+                        description: Consultation duration number in seconds of service type config
+                        type: string
+                      pauseAfterConsultation:
+                        description: Pause after consultation number in seconds of service type config
+                        type: string
+                      minTimeBorder:
+                        description: Minimum time border number in seconds of service type config
+                        type: string
+                      maxTimeBorder:
+                        description: Maximum time border number in seconds of service type config
+                        type: string
+                      isEnabled:
+                        description: Flag that shows whether service type config is enabled
+                        type: boolean
+                      isAbleToBookingBySeeker:
+                        description: Flag that shows whether the booking is available by seeker
+                        type: boolean
+                  type: array
+                uuid:
+                  description: Unique number of visit reason template
+                  type: string
+                title:
+                  description: Title of visit reason template
+                  type: string
+                isForFirstConsultation:
+                  description: Mark of first consultation to expert
+                  type: boolean
+                isForSubsequentConsultation:
+                  description: Mark of subsequent consultation to expert
+                  type: boolean
+                formatType:
+                  description: Number of format type for visit reason template
+                  type: integer
+            type: array
+      tags:
+        - Visit Reason Templates
+      security:
+        - CalendarManagerApiClient: []
+definitions:
+  CreatePersonalCalendarEventFormType:
+    required:
+      - firstName
+      - lastName
+      - email
+      - serviceTypeCodes
+      - startDate
+      - genderCode
+      - animalName
+      - animalType
+      - membershipNumber
+      - messageToExpert
+      - birthday
+      - visitReason
+      - tan
+      - isForFirstConsultation
+      - notes
+      - noShow
+      - addressUuid
+      - userCardUuid
+      - eventType
+      - status
+      - userUuid
+      - endDate
+      - duration
+      - pause
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      serviceTypeCodes:
+        items:
+          type: string
+        type: array
+      startDate:
+        type: string
+        format: date-time
+      genderCode:
+        type: string
+      animalName:
+        type: string
+      animalType:
+        type: string
+      membershipNumber:
+        type: string
+      messageToExpert:
+        type: string
+      birthday:
+        type: string
+        format: date-time
+      visitReason:
+        type: string
+        format: CalendarBundle\Entity\VisitReason id
+      tan:
+        type: string
+        format: DataBundle\Entity\Tan id
+      isForFirstConsultation:
+        type: boolean
+      notes:
+        type: string
+      noShow:
+        type: boolean
+      addressUuid:
+        type: string
+        format: DataBundle\Entity\Address\Address id
+      userCardUuid:
+        type: string
+      eventType:
+        type: string
+      status:
+        type: integer
+      userUuid:
+        description: Seeker user UUID, must be valid if passed
+        type: string
+      endDate:
+        type: string
+        format: date-time
+      duration:
+        type: integer
+      pause:
+        type: integer
+    type: object
+  PersonalCalendarEvent:
+    properties:
+      id:
+        type: string
+      pause:
+        type: integer
+      status:
+        type: integer
+      cancelMessage:
+        type: string
+      cancellationReason:
+        type: string
+      visitReason:
+        $ref: '#/definitions/VisitReason'
+      isForFirstConsultation:
+        type: boolean
+      notes:
+        type: string
+      noShow:
+        type: boolean
+    type: object
+  CalendarEventCancelFormType:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+    type: object
+  PersonalCalendarEvent2:
+    properties:
+      id:
+        type: string
+      pause:
+        type: integer
+      status:
+        type: integer
+      cancelMessage:
+        type: string
+      cancellationReason:
+        type: string
+      visitReason:
+        $ref: '#/definitions/VisitReason2'
+      isForFirstConsultation:
+        type: boolean
+      notes:
+        type: string
+      noShow:
+        type: boolean
+    type: object
+  CalendarEventConfirmFormType:
+    required:
+      - firstName
+      - lastName
+      - email
+      - addressUuid
+      - userUuid
+      - categories
+      - emailLanguage
+      - birthday
+      - genderCode
+      - membershipNumber
+      - messageToExpert
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      addressUuid:
+        type: string
+        format: DataBundle\Entity\Address\Address id
+      userUuid:
+        description: Seeker user UUID, must be valid if passed
+        type: string
+      categories:
+        items:
+          type: string
+        type: array
+        format: '[AppBundle\Entity\Category id]'
+      emailLanguage:
+        type: string
+        enum:
+          - en
+          - de
+          - fr
+          - es
+          - it
+          - zh
+          - nl
+      birthday:
+        type: string
+        format: date-time
+      genderCode:
+        type: string
+      membershipNumber:
+        type: string
+      messageToExpert:
+        type: string
+    type: object
+  User:
+    properties:
+      uuid:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      salutation:
+        $ref: '#/definitions/Salutation'
+      academicTitle:
+        $ref: '#/definitions/AcademicTitle'
+      academicDegree:
+        title: Academic degree
+        type: string
+      externalId:
+        type: string
+    type: object
+  CalendarEventMember:
+    properties:
+      invitation:
+        $ref: '#/definitions/CalendarEventInvitation'
+    type: object
+  VisitReason:
+    properties:
+      uuid:
+        type: string
+      title:
+        type: string
+      isForFirstConsultation:
+        type: boolean
+      isForSubsequentConsultation:
+        type: boolean
+      type:
+        type: integer
+      formatType:
+        type: integer
+    type: object
+  VisitReason2:
+    properties:
+      uuid:
+        type: string
+      title:
+        type: string
+      isForFirstConsultation:
+        type: boolean
+      isForSubsequentConsultation:
+        type: boolean
+      type:
+        type: integer
+      formatType:
+        type: integer
+    type: object
+  Salutation:
+    properties:
+      id:
+        type: integer
+      translations:
+        title: Translations
+        items:
+          $ref: '#/definitions/SalutationTranslation'
+        type: array
+    type: object
+  AcademicTitle:
+    properties:
+      id:
+        type: integer
+      translations:
+        title: Translations
+        items:
+          $ref: '#/definitions/AcademicTitleTranslation'
+        type: array
+    type: object
+  CalendarEventInvitation:
+    properties:
+      startLink:
+        description: link to start an event
+        type: string
+      cancelLink:
+        description: link to cancel an event
+        type: string
+      addressStreet:
+        type: string
+      addressNumber:
+        type: string
+      addressCity:
+        type: string
+      addressZip:
+        type: string
+    type: object
+  SalutationTranslation:
+    properties:
+      locale:
+        type: string
+      name:
+        type: string
+    type: object
+  AcademicTitleTranslation:
+    properties:
+      locale:
+        type: string
+      name:
+        type: string
+    type: object
+securityDefinitions:
+  CalendarManagerApiClient:
+    type: oauth2
+    flow: application
+    tokenUrl: https://booking.staging.algeacare.com/auth/realms/algeacare/protocol/openid-connect/token

@@ -1,0 +1,490 @@
+swagger: '2.0'
+info:
+  title: User Manager API
+  version: 0.0.1
+paths:
+  /api/userManager/v0/user/{uuid}/expert/generalInformation:
+    post:
+      summary: Update general information
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+        - name: form
+          in: body
+          schema:
+            properties:
+              shortBio:
+                description: Short bio
+                type: string
+              professionalBackground:
+                description: Professional background
+                type: string
+              services:
+                description: Services
+                type: string
+              spokenLanguages:
+                items:
+                  description: Spoken language ids
+                  type: integer
+                type: array
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - 'User Manager: Expert Profile'
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}/expert/medicalNumbers:
+    post:
+      summary: Update expert profile's medical numbers
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+        - name: form
+          in: body
+          schema:
+            properties:
+              doctorNumber:
+                description: Lifelong doctr number (LANR)
+                type: string
+              locationNumber:
+                description: Business location number (BSNR)
+                type: boolean
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - 'User Manager: Expert Profile'
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}/expert/categories:
+    post:
+      summary: 'Update expert profile: categories'
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+        - name: form
+          in: body
+          schema:
+            properties:
+              categories:
+                items:
+                  description: Category ids
+                  type: integer
+                type: array
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - 'User Manager: Expert Profile'
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}/expert/searchSettings:
+    post:
+      summary: 'Update expert profile: search settings'
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+        - name: form
+          in: body
+          schema:
+            properties:
+              searchable:
+                description: Visibility in the platform search results
+                type: boolean
+              allowSeoIndex:
+                description: Visibility in the search engines results
+                type: boolean
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - 'User Manager: Expert Profile'
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}/expert/ratesAndBilling:
+    post:
+      summary: 'Update expert profile: rates and billing'
+      parameters:
+        - name: form
+          in: body
+          schema:
+            properties:
+              allowCallArchiving:
+                description: Allow recording of calls
+                type: boolean
+              allowMessaging:
+                description: Allow personal chat
+                type: boolean
+              providesRegularOneToOneCallServices:
+                description: Allows user to be reachable for other users by a video/audio consultation
+                type: boolean
+              pricePerTimeUnit:
+                description: NET rate per time unit
+              freeMinutes:
+                description: Free minutes at the beginning of the call
+                type: integer
+              providesCallRequestFromExpertServices:
+                description: Video advice - statutory insured
+                type: boolean
+              providesServiceWithPredefinedCalculationScheme:
+                description: Provides services with predefined calculation scheme
+                type: boolean
+              privateInsuranceMultiplicator:
+                description: Expert's private insurance multiplier
+              moneyReceiverType:
+                description: 'Who will receive money: Expert or organization'
+                type: integer
+        - name: uuid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - 'User Manager: Expert Profile'
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user:
+    put:
+      summary: Create user
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: JSON body
+          schema:
+            required:
+              - email
+              - language
+              - firstName
+              - lastName
+              - country
+            properties:
+              email:
+                description: E-mail
+                type: string
+              language:
+                description: Interface language
+                type: string
+              firstName:
+                description: First name
+                type: string
+              lastName:
+                description: Last name
+                type: string
+              externalId:
+                description: External ID
+                type: string
+              emailVerified:
+                description: |-
+                  true - if the email has been verified,
+                      false - if system should send out a verification link to the user (default: false)
+                type: boolean
+              passwordResetRequired:
+                description: |-
+                  true - the system send out a email to the user to reset/change the password,
+                      false - system will do nothing (default: false)
+                type: boolean
+              password:
+                description: User password, the random password will be used if empty
+                type: string
+              country:
+                description: Country of residence (ISO 3166-1 alpha-2)
+                type: string
+              birthday:
+                description: Birthday (YYYY-MM-DD), must be at least 18 years old
+                type: string
+            type: object
+      responses:
+        '201':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: |2-
+
+                  User already exists,
+                  Not allowed to request a password reset and email verification at the same time
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/findByEmail:
+    get:
+      summary: Find user by E-mail
+      parameters:
+        - name: email
+          in: query
+          required: true
+          description: E-mail
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}:
+    get:
+      summary: Get user by UUID
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            properties:
+              uuid:
+                description: Unique number of expert user
+                type: string
+              externalId:
+                description: External ID, can be used to identify users by external applications
+                type: string
+              firstName:
+                description: First name of expert user
+                type: string
+              lastName:
+                description: Last name of expert user
+                type: string
+              spokenLanguages:
+                description: Spoken languages id numbers
+                items:
+                  type: integer
+                type: array
+              croppedPhoto:
+                description: User photo link
+                type: string
+              academicDegree:
+                description: Expert's academic degree description
+                type: string
+              organizationId:
+                description: Expert's organization ID
+                type: integer
+              calendarId:
+                description: Expert's unique calendar id string
+                type: string
+              salutation:
+                properties:
+                  id:
+                    description: Salutation unique number
+                    type: number
+                  translations:
+                    items:
+                      properties:
+                        locale:
+                          description: Language code for salutation (ISO 639-1)
+                          type: string
+                        name:
+                          description: Salutation name
+                          type: string
+                    type: array
+                type: object
+              academicTitle:
+                properties:
+                  id:
+                    description: Academic title unique number
+                    type: number
+                  translations:
+                    items:
+                      properties:
+                        locale:
+                          description: Language code for academic title (ISO 639-1)
+                          type: string
+                        name:
+                          description: Academic title name
+                          type: string
+                    type: array
+                type: object
+              expert:
+                properties:
+                  generalInformation:
+                    properties:
+                      professionalBackground:
+                        description: About expert
+                        type: string
+                      shortBio:
+                        description: Short bio
+                        type: string
+                      services:
+                        description: Expert service description
+                        type: string
+                    type: object
+                  categories:
+                    items:
+                      properties:
+                        id:
+                          description: Category ID
+                          type: integer
+                        translations:
+                          description: Category translations
+                          items:
+                            properties:
+                              description:
+                                description: Category description
+                                type: string
+                              locale:
+                                description: Translation locale
+                                type: string
+                              name:
+                                description: Category name
+                                type: string
+                          type: array
+                    type: array
+                type: object
+            type: object
+        '400':
+          description: User has not been found
+        '404':
+          description: Not found
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}/baseInformation:
+    post:
+      summary: Update base information
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+        - name: body
+          in: body
+          description: |-
+            Parameters `firstName` and `lastName` are mandatory, they always need to be set
+                and will be overwritten by every API call
+          schema:
+            required:
+              - firstName
+              - lastName
+            properties:
+              firstName:
+                description: User's first name
+                type: string
+              lastName:
+                description: User's last name
+                type: string
+              externalId:
+                description: |-
+                  Any external id which will be added to any user result call,
+                      can be used to identify users by external applications
+                type: string
+            type: object
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/{uuid}/upgradeSeekerToExpert:
+    post:
+      summary: Upgrade seeker to expert
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+definitions:
+  User:
+    properties:
+      uuid:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      salutation:
+        $ref: '#/definitions/Salutation'
+      academicTitle:
+        $ref: '#/definitions/AcademicTitle'
+      isExpert:
+        type: boolean
+      externalId:
+        type: string
+    type: object
+  Salutation:
+    properties:
+      id:
+        type: integer
+      translations:
+        title: Translations
+        items:
+          $ref: '#/definitions/SalutationTranslation'
+        type: array
+    type: object
+  AcademicTitle:
+    properties:
+      id:
+        type: integer
+      translations:
+        title: Translations
+        items:
+          $ref: '#/definitions/AcademicTitleTranslation'
+        type: array
+    type: object
+  SalutationTranslation:
+    properties:
+      locale:
+        type: string
+      name:
+        type: string
+    type: object
+  AcademicTitleTranslation:
+    properties:
+      locale:
+        type: string
+      name:
+        type: string
+    type: object
+securityDefinitions:
+  UserManagerApiClient:
+    type: oauth2
+    flow: application
+    tokenUrl: https://booking.staging.algeacare.com/auth/realms/algeacare/protocol/openid-connect/token

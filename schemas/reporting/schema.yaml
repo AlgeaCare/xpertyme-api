@@ -1,0 +1,225 @@
+swagger: '2.0'
+info:
+  title: Reporting Manager API
+  version: 0.0.1
+paths:
+  /api/reportingManager/v0/calendarEvents/personal:
+    get:
+      summary: Get list of personal calendar events
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: 'Event status filter (supported values: `all`, `finished`, `canceled`, `active`, `created`)'
+          type: string
+        - name: page
+          in: query
+          required: true
+          description: Page number
+          type: integer
+        - name: perPage
+          in: query
+          required: true
+          description: Number of entries per page
+          type: integer
+        - name: startDateFrom
+          in: query
+          required: true
+          description: Calendar event start date from (format yyyy-MM-dd)
+          type: string
+        - name: startDateTo
+          in: query
+          required: true
+          description: Calendar event start date to (format yyyy-MM-dd)
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            items:
+              description: Personal calendar event
+              properties:
+                dateCreated:
+                  description: Bank account id
+                  type: string
+                startDate:
+                  description: Bank account status
+                  type: string
+                endDate:
+                  description: Owner name
+                  type: string
+                formatType:
+                  description: Appointment format type
+                  type: integer
+                  enum:
+                    - 1 - online
+                    - 2 - offline
+                    - 3 - phone
+                calendarEventId:
+                  description: BIC
+                  type: string
+                status:
+                  description: Calendar event status
+                  type: integer
+                  enum:
+                    - 0 - created
+                    - 1 - canceled
+                    - 2 - active
+                    - 3 - finished
+                participant:
+                  $ref: '#/definitions/User'
+                expert:
+                  $ref: '#/definitions/User'
+              type: object
+            type: array
+        '400':
+          description: Bad request
+      tags:
+        - Reporting Manager
+      security:
+        - ReportingManagerApiClient: []
+  /api/reportingManager/v0/users:
+    get:
+      summary: Get users list
+      parameters:
+        - name: usersType
+          in: query
+          required: true
+          description: 'Users type filter (supported values: `all`, `experts`, `clients`)'
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            items:
+              $ref: '#/definitions/User2'
+            type: array
+        '400':
+          description: Bad request
+      tags:
+        - Reporting Manager
+      security:
+        - ReportingManagerApiClient: []
+  /api/reportingManager/v0/{calendar}/workingHours:
+    get:
+      summary: Get working hours data
+      parameters:
+        - name: calendar
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            items:
+              $ref: '#/definitions/WorkingHours'
+            type: array
+        '400':
+          description: Bad request
+      tags:
+        - Reporting Manager
+      security:
+        - ReportingManagerApiClient: []
+definitions:
+  User:
+    properties:
+      uuid:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      birthday:
+        type: string
+        format: date-time
+      externalId:
+        type: string
+    type: object
+  User2:
+    properties:
+      id:
+        type: integer
+      uuid:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      salutation:
+        $ref: '#/definitions/Salutation'
+      birthday:
+        type: string
+        format: date-time
+      phone:
+        type: string
+      dateCreated:
+        type: string
+        format: date-time
+      isExpert:
+        type: boolean
+      externalId:
+        type: string
+    type: object
+  WorkingHours:
+    properties:
+      uuid:
+        type: string
+      name:
+        type: string
+      repeatingType:
+        type: integer
+      repeatingPeriod:
+        type: integer
+      dateStarted:
+        type: string
+        format: date-time
+      dateFinished:
+        title: 'If null: infinite series'
+        type: string
+        format: date-time
+      timeIntervals:
+        items:
+          $ref: '#/definitions/WorkingHoursTimeInterval'
+        type: array
+      visitReasonsList:
+        items:
+          $ref: '#/definitions/VisitReason'
+        type: array
+      exceptions:
+        items:
+          $ref: '#/definitions/WorkingHoursException'
+        type: array
+    type: object
+  Salutation:
+    properties:
+      id:
+        type: integer
+      translations:
+        title: Translations
+        items:
+          $ref: '#/definitions/SalutationTranslation'
+        type: array
+    type: object
+  WorkingHoursTimeInterval:
+    type: object
+  VisitReason:
+    type: object
+  WorkingHoursException:
+    type: object
+  SalutationTranslation:
+    properties:
+      locale:
+        type: string
+      name:
+        type: string
+    type: object
+securityDefinitions:
+  ReportingManagerApiClient:
+    type: oauth2
+    flow: application
+    tokenUrl: https://booking.staging.algeacare.com/auth/realms/algeacare/protocol/openid-connect/token
