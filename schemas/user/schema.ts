@@ -213,6 +213,8 @@ export interface paths {
         /** Returned when successful */
         200: {
           schema: {
+            /** @description the email address */
+            email?: string;
             /** @description Unique number of expert user */
             uuid?: string;
             /** @description External ID, can be used to identify users by external applications */

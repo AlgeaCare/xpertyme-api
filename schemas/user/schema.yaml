@@ -265,6 +265,9 @@ paths:
           description: Returned when successful
           schema:
             properties:
+              email:
+                description: the email address
+                type: string
               uuid:
                 description: Unique number of expert user
                 type: string
