@@ -39,7 +39,7 @@ export const getAccessToken = async () => {
     lastRequested = new Date()
 
     const tokenResponse = await wretch(
-      `${xpertyme.apiDomain}/auth/realms/algeacare/protocol/openid-connect/token`
+      `${xpertyme.apiDomain}/${xpertyme.tokenPath}`
     )
       .auth(`Basic ${encodedKey()}`)
       .headers({

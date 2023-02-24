@@ -3,5 +3,6 @@ export type APIConfig = {
     clientId: string
     clientSecret: string
     apiDomain: string
+    tokenPath: string
   }
 }

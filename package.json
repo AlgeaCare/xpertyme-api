@@ -1,6 +1,6 @@
 {
   "name": "@algea_care/xpertyme-api",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Just a little lib for the xpertyme api",
   "preversion": "npm run build",
   "main": "dist/src/index.js",
@@ -9,7 +9,8 @@
     "build": "npx tsc && npm run generate",
     "test": "jest",
     "lint": "npx eslint ./src",
-    "generate": "openapi-typescript 'schemas/**/schema.yaml' --output ./"
+    "generate": "openapi-typescript 'schemas/**/schema.yaml' --output ./",
+    "publish": "npm run build && npm publish --access public"
   },
   "repository": {
     "type": "git",

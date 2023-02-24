@@ -4,7 +4,7 @@ import { create } from '../../src/user/create'
 const run = async () => {
   const user = await create({
     country: 'de',
-    email: 'gareth.fuller@algeacare.com',
+    email: 'gareth.muller@algeacare.com',
     firstName: 'Gareth',
     language: 'de',
     lastName: 'Fuller',

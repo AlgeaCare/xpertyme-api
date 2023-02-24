@@ -1,0 +1,175 @@
+swagger: '2.0'
+info:
+  title: Organization Manager API
+  version: 0.0.1
+paths:
+  /api/organizationManager/v0/organizations/{organization_uuid}/addresses:
+    get:
+      summary: Get list of addreses from ogranization
+      parameters:
+        - name: organization_uuid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            properties:
+              page:
+                description: number of the page
+                type: number
+              perPage:
+                description: Number of items per page
+                type: number
+              total:
+                description: Total number of the found items
+                type: number
+              data:
+                description: list of addresses
+                items:
+                  properties:
+                    uuid:
+                      description: UUID of address
+                      type: string
+                    type:
+                      description: Type string of address
+                      type: string
+                    fullName:
+                      description: address's full name
+                      type: string
+                    suffixName:
+                      description: address's suffix name
+                      type: string
+                    addressLine1:
+                      description: address's line number 1
+                      type: string
+                    addressLine2:
+                      description: address's line number 2
+                      type: string
+                    label:
+                      description: address's label for frontend
+                      type: string
+                    city:
+                      description: address's city
+                      type: string
+                    state:
+                      description: address's state
+                      type: string
+                    zip:
+                      description: address's zip
+                      type: string
+                    country:
+                      properties:
+                        iso:
+                          description: Country of residence (ISO 3166-1 alpha-2)
+                          type: string
+                      type: object
+                  type: object
+                type: array
+            type: object
+      tags:
+        - Addresses
+      security:
+        - OrganizationManagerApiClient: []
+  /api/organizationManager/v0/search:
+    get:
+      summary: Get organization list by address or geocodes
+      parameters:
+        - name: address
+          in: query
+          required: false
+          description: Address required if latitude and longitude coordinates are empty
+          type: string
+        - name: radiusKm
+          in: query
+          required: true
+          description: Radius in kilometers
+          type: integer
+        - name: latitude
+          in: query
+          required: false
+          description: latitude coordinate
+          type: number
+        - name: longitude
+          in: query
+          required: false
+          description: longitude coordinate
+          type: number
+      responses:
+        '200':
+          description: Returned when successful
+          schema:
+            items:
+              properties:
+                uuid:
+                  description: Unique number of organization
+                  type: string
+                name:
+                  description: Name of organization
+                  type: string
+                visible:
+                  description: Visible organization on platform
+                  type: boolean
+                distance:
+                  description: distance beetwen search address and organization in kilometres
+                  type: number
+                experts:
+                  items:
+                    description: expert data
+                    properties:
+                      expertUuid:
+                        description: Unique number of expert
+                        type: string
+                    type: object
+                  type: array
+                address:
+                  properties:
+                    uuid:
+                      description: UUID of address
+                      type: string
+                    type:
+                      description: Type string of address
+                      type: string
+                    fullName:
+                      description: address's full name
+                      type: string
+                    suffixName:
+                      description: address's suffix name
+                      type: string
+                    addressLine1:
+                      description: address's line number 1
+                      type: string
+                    addressLine2:
+                      description: address's line number 2
+                      type: string
+                    label:
+                      description: address's label for frontend
+                      type: string
+                    city:
+                      description: address's city
+                      type: string
+                    state:
+                      description: address's state
+                      type: string
+                    zip:
+                      description: address's zip
+                      type: string
+                    country:
+                      properties:
+                        iso:
+                          description: Country of residence (ISO 3166-1 alpha-2)
+                          type: string
+                      type: object
+                  type: object
+              type: object
+            type: array
+      tags:
+        - Search
+      security:
+        - OrganizationManagerApiClient: []
+securityDefinitions:
+  OrganizationManagerApiClient:
+    type: oauth2
+    flow: application
+    tokenUrl: https://booking.staging.algeacare.com/auth/realms/algeacare/protocol/openid-connect/token

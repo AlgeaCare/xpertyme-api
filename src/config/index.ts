@@ -10,7 +10,8 @@ export const envConfig = (): APIConfig => {
     xpertyme: {
       clientId: process.env.XPERT_CLIENT_ID!,
       clientSecret: process.env.XPERT_CLIENT_SECRET!,
-      apiDomain: process.env.XPERT_API_DOMAIN!
+      apiDomain: process.env.XPERT_API_DOMAIN!,
+      tokenPath: process.env.XPERT_TOKEN_PATH!
     }
   }
 }
