@@ -3,14 +3,15 @@ import { paths } from '../../schemas/calendar/schema'
 import { apiRoot } from '.'
 
 type Path = paths['/api/calendarManager/v0/{calendar}/events/']['post']
-type Payload = Path['parameters']['body']
+// type Payload = Path['parameters']['body']
 type Response = Path['responses']['200']['schema']
 
 export const createEvent = async ({
   payload,
   calendarId
 }: {
-  payload: Payload
+  // the types in the schema are wrong :/
+  payload: unknown
   calendarId: string
 }) => {
   const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events`)
