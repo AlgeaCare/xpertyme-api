@@ -5,7 +5,7 @@ import { AccessTokenResponse } from './types'
 const seconds = 1000
 
 const baseToken: AccessTokenResponse = {
-  expires_in: 10,
+  expires_in: 40,
   'not-before-policy': 200,
   access_token: 'something',
   scope: 'another thing',
@@ -14,16 +14,40 @@ const baseToken: AccessTokenResponse = {
 }
 describe('getting an access token', () => {
   it('should get a new token if the old one expired', () => {
-    const elevenSecondsAgo = new Date(Date.now() - 11 * seconds)
+    const lastRequested = new Date(Date.now() - 41 * seconds)
     expect(
-      shouldGetNewToken({ token: baseToken, lastRequested: elevenSecondsAgo })
+      shouldGetNewToken({ token: baseToken, lastRequested, tokenBuffer: 30 })
     ).toEqual(true)
   })
 
   it('should not get a new access token if the last one is still valid', () => {
-    const aFewSecondsAgo = new Date(Date.now() - 2 * seconds)
+    const lastRequested = new Date(Date.now() - 1 * seconds)
     expect(
-      shouldGetNewToken({ token: baseToken, lastRequested: aFewSecondsAgo })
+      shouldGetNewToken({
+        token: baseToken,
+        lastRequested,
+        tokenBuffer: 30
+      })
+    ).toEqual(false)
+  })
+
+  it('should get a new token if the old one is about to expire soon', () => {
+    const lastRequested = new Date(Date.now() - 11 * seconds)
+    // 11 + 30 = 41 > 40 (token expiry)
+    expect(
+      shouldGetNewToken({
+        token: baseToken,
+        lastRequested,
+        tokenBuffer: 30
+      })
+    ).toEqual(true)
+  })
+
+  it('should not get a new one for one that was requested 9 seconds ago', () => {
+    const lastRequested = new Date(Date.now() - 9 * seconds)
+    // 9 + 30 = 39 (< 40 on expiry)
+    expect(
+      shouldGetNewToken({ token: baseToken, lastRequested, tokenBuffer: 30 })
     ).toEqual(false)
   })
 

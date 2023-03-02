@@ -8,10 +8,12 @@ let lastRequested: Date
 
 export const shouldGetNewToken = ({
   token,
-  lastRequested
+  lastRequested,
+  tokenBuffer = 60
 }: {
   token?: AccessTokenResponse
   lastRequested?: Date
+  tokenBuffer?: number
 }) => {
   if (!lastRequested) {
     return true
@@ -20,11 +22,11 @@ export const shouldGetNewToken = ({
     return true
   }
 
-  // if she expired
-  if (
-    Math.abs(lastRequested.getTime() - new Date().getTime()) / 1000 >
-    token.expires_in
-  ) {
+  const secondsSinceRequested =
+    Math.abs(lastRequested.getTime() - new Date().getTime()) / 1000
+
+  // if she has / is about to expire
+  if (secondsSinceRequested + tokenBuffer > token.expires_in) {
     return true
   }
 
