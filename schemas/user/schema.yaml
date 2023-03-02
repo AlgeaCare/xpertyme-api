@@ -266,7 +266,7 @@ paths:
           schema:
             properties:
               email:
-                description: the email address
+                description: email address
                 type: string
               uuid:
                 description: Unique number of expert user
@@ -370,6 +370,33 @@ paths:
           description: User has not been found
         '404':
           description: Not found
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+    delete:
+      summary: Delete user
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: User UUID
+          type: string
+        - name: softDelete
+          in: query
+          required: false
+          description: Use soft or permanent deletion
+          type: boolean
+          default: 'false'
+      responses:
+        '404':
+          description: Not found
+        '409':
+          description: Resource have dependencies
+        '410':
+          description: Resource already deleted
+        '422':
+          description: Unprocessable entity
       tags:
         - User Manager
       security:

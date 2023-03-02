@@ -1,4 +1,5 @@
 import { create } from './create'
+import { deleteUser } from './delete'
 import { get } from './get'
 import { upgradeToExpert } from './upgrade-to-expert'
 
@@ -8,5 +9,6 @@ export const apiRoot = 'userManager/v0'
 export default {
   get,
   create,
-  upgradeToExpert
+  upgradeToExpert,
+  deleteUser
 }

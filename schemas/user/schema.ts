@@ -213,7 +213,7 @@ export interface paths {
         /** Returned when successful */
         200: {
           schema: {
-            /** @description the email address */
+            /** @description email address */
             email?: string;
             /** @description Unique number of expert user */
             uuid?: string;
@@ -282,6 +282,28 @@ export interface paths {
         400: unknown;
         /** Not found */
         404: unknown;
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          /** User UUID */
+          uuid: string;
+        };
+        query: {
+          /** Use soft or permanent deletion */
+          softDelete?: boolean;
+        };
+      };
+      responses: {
+        /** Not found */
+        404: unknown;
+        /** Resource have dependencies */
+        409: unknown;
+        /** Resource already deleted */
+        410: unknown;
+        /** Unprocessable entity */
+        422: unknown;
       };
     };
   };
