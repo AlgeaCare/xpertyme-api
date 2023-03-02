@@ -7,13 +7,15 @@ type UserResponse =
 
 export const get = async (uuid: string) => {
   const apiCall = await xpertymeApi(`${apiRoot}/user/${uuid}`)
-  const res = await apiCall.get().res()
-  if (!res.ok) {
-    if (res.status === 400 || res.status === 404) {
+  const res = await apiCall
+    .get()
+    .error(404, () => {
       throw new Error('user not found')
-    }
-    console.error(res.body)
-    throw new Error('unknown error!')
-  }
+    })
+    .error(400, () => {
+      throw new Error('user not found')
+    })
+    .res()
+
   return (await res.json()) as UserResponse
 }

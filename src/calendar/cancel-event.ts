@@ -20,9 +20,5 @@ export const cancelEvent = async ({
     `${apiRoot}/nba/${calendarId}/events/${eventId}/cancel`
   )
   const res = await apiCall.post(payload).res()
-  if (!res.ok) {
-    console.error(res.body)
-    throw new Error('unknown error!')
-  }
   return (await res.json()) as Response
 }

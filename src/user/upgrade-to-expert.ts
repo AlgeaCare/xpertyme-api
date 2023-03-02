@@ -10,13 +10,12 @@ export const upgradeToExpert = async (uuid: string) => {
   const apiCall = await xpertymeApi(
     `${apiRoot}/user/${uuid}/upgradeSeekerToExpert`
   )
-  const res = await apiCall.post().res()
-  if (!res.ok) {
-    if (res.status === 404) {
+  const res = await apiCall
+    .post()
+    .error(404, () => {
       throw new Error('user not found with uuid')
-    }
-    console.error(res.body)
-    throw new Error('unknown error!')
-  }
+    })
+    .res()
+
   return (await res.json()) as Response
 }

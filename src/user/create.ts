@@ -8,13 +8,12 @@ type Response = Path['responses']['201']['schema']
 
 export const create = async (payload: Payload) => {
   const apiCall = await xpertymeApi(`${apiRoot}/user`)
-  const res = await apiCall.put(payload).res()
-  if (!res.ok) {
-    if (res.status === 400) {
+  const res = await apiCall
+    .put(payload)
+    .error(400, () => {
       throw new Error('user already exists')
-    }
-    console.error(res.body)
-    throw new Error('unknown error!')
-  }
+    })
+    .res()
+
   return (await res.json()) as Response
 }

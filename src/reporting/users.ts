@@ -6,7 +6,7 @@ type UserType = 'all' | 'experts' | 'client'
 
 export const users = async (userType: UserType = 'all') => {
   const apiCall = await xpertymeApi(`${apiRoot}/users?usersType=${userType}`)
-  return apiCall
-    .get()
-    .res(async (r) => (await r.json()) as definitions['User2'][])
+  const res = await apiCall.get().res()
+
+  return (await res.json()) as definitions['User2'][]
 }

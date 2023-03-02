@@ -16,9 +16,5 @@ export const createEvent = async ({
 }) => {
   const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events`)
   const res = await apiCall.post(payload).res()
-  if (!res.ok) {
-    console.error(res.body)
-    throw new Error('unknown error!')
-  }
   return (await res.json()) as Response
 }
