@@ -2,7 +2,7 @@ import { xpertymeApi } from '../api'
 import { definitions } from '../../schemas/reporting/schema'
 import { apiRoot } from '.'
 
-type UserType = 'all' | 'experts' | 'client'
+type UserType = 'all' | 'experts' | 'clients'
 
 export const users = async (userType: UserType = 'all') => {
   const apiCall = await xpertymeApi(`${apiRoot}/users?usersType=${userType}`)
