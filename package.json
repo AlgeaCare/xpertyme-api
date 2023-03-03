@@ -1,6 +1,6 @@
 {
   "name": "@algea_care/xpertyme-api",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Just a little lib for the xpertyme api",
   "preversion": "npm run build",
   "main": "dist/src/index.js",

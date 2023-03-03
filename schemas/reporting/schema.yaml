@@ -7,11 +7,17 @@ paths:
     get:
       summary: Get list of personal calendar events
       parameters:
-        - name: status
+        - name: eventStatus
           in: query
           required: true
-          description: 'Event status filter (supported values: `all`, `finished`, `canceled`, `active`, `created`)'
+          description: Event status filter
           type: string
+          enum:
+            - all
+            - finished
+            - canceled
+            - active
+            - created
         - name: page
           in: query
           required: true
@@ -22,12 +28,12 @@ paths:
           required: true
           description: Number of entries per page
           type: integer
-        - name: startDateFrom
+        - name: dateFrom
           in: query
           required: true
           description: Calendar event start date from (format yyyy-MM-dd)
           type: string
-        - name: startDateTo
+        - name: dateTo
           in: query
           required: true
           description: Calendar event start date to (format yyyy-MM-dd)
@@ -36,42 +42,105 @@ paths:
         '200':
           description: Successful operation
           schema:
-            items:
-              description: Personal calendar event
-              properties:
-                dateCreated:
-                  description: Bank account id
-                  type: string
-                startDate:
-                  description: Bank account status
-                  type: string
-                endDate:
-                  description: Owner name
-                  type: string
-                formatType:
-                  description: Appointment format type
-                  type: integer
-                  enum:
-                    - 1 - online
-                    - 2 - offline
-                    - 3 - phone
-                calendarEventId:
-                  description: BIC
-                  type: string
-                status:
-                  description: Calendar event status
-                  type: integer
-                  enum:
-                    - 0 - created
-                    - 1 - canceled
-                    - 2 - active
-                    - 3 - finished
-                participant:
-                  $ref: '#/definitions/User'
-                expert:
-                  $ref: '#/definitions/User'
-              type: object
-            type: array
+            properties:
+              total:
+                description: Total number of events found
+                type: string
+              page:
+                description: Page number
+                type: string
+              perPage:
+                description: Number of entries per page
+                type: string
+              events:
+                items:
+                  description: Personal calendar event
+                  properties:
+                    calendarEventId:
+                      description: Event id
+                      type: string
+                    expert:
+                      description: Calendar event owner (expert)
+                      properties:
+                        uuid:
+                          type: string
+                        email:
+                          type: string
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        externalId:
+                          type: string
+                        birthday:
+                          type: string
+                      type: object
+                    participant:
+                      description: Calendar event participant (seeker)
+                      properties:
+                        uuid:
+                          type: string
+                        email:
+                          type: string
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        externalId:
+                          type: string
+                        birthday:
+                          type: string
+                      type: object
+                    startDate:
+                      description: Event start date
+                      type: string
+                    endDate:
+                      description: Event end date
+                      type: string
+                    dateCreated:
+                      description: Date created
+                      type: string
+                    status:
+                      description: Calendar event status
+                      type: integer
+                      enum:
+                        - created
+                        - active
+                        - canceled
+                        - finished
+                    appointmentType:
+                      description: Appointment type
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - global
+                            - individual
+                        formaType:
+                          description: Appointment format type
+                          type: string
+                          enum:
+                            - onsite
+                            - video
+                            - phone
+                        uuid:
+                          description: Appointment type uuid
+                          type: string
+                        title:
+                          description: Appointment type title
+                          type: string
+                      type: object
+                    locationUuid:
+                      description: Location UUID
+                      type: string
+                    noShow:
+                      description: No show flag
+                      type: boolean
+                    notes:
+                      description: Notes
+                      type: boolean
+                  type: object
+                type: array
         '400':
           description: Bad request
       tags:
@@ -87,13 +156,34 @@ paths:
           required: true
           description: 'Users type filter (supported values: `all`, `experts`, `clients`)'
           type: string
+        - name: page
+          in: query
+          required: true
+          description: Page number
+          type: integer
+        - name: perPage
+          in: query
+          required: true
+          description: Number of entries per page (max. 50)
+          type: integer
       responses:
         '200':
           description: Successful operation
           schema:
-            items:
-              $ref: '#/definitions/User2'
-            type: array
+            properties:
+              total:
+                description: Total number of events found
+                type: string
+              page:
+                description: Page number
+                type: string
+              perPage:
+                description: Number of entries per page
+                type: string
+              users:
+                items:
+                  $ref: '#/definitions/User'
+                type: array
         '400':
           description: Bad request
       tags:
@@ -123,22 +213,6 @@ paths:
         - ReportingManagerApiClient: []
 definitions:
   User:
-    properties:
-      uuid:
-        type: string
-      email:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      birthday:
-        type: string
-        format: date-time
-      externalId:
-        type: string
-    type: object
-  User2:
     properties:
       id:
         type: integer

@@ -7,8 +7,9 @@ export const xpertymeApi = async (endPoint: string) => {
 
   // get the access token for each request to the API
   const token = await getAccessToken()
-
-  return wretch(`${xpertyme.apiDomain}/api/${endPoint}`)
+  const url = `${xpertyme.apiDomain}/api/${endPoint}`
+  console.log(url)
+  return wretch(url)
     .auth(`Bearer ${token}`)
     .headers({ Accept: 'application/json' })
 }

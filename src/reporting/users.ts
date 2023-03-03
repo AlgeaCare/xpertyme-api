@@ -1,12 +1,16 @@
 import { xpertymeApi } from '../api'
-import { definitions } from '../../schemas/reporting/schema'
+import { paths } from '../../schemas/reporting/schema'
 import { apiRoot } from '.'
 
-type UserType = 'all' | 'experts' | 'clients'
+type Path = paths['/api/reportingManager/v0/users']['get']
+type Payload = Path['parameters']['query']
+type Response = Path['responses']['200']['schema']
 
-export const users = async (userType: UserType = 'all') => {
-  const apiCall = await xpertymeApi(`${apiRoot}/users?usersType=${userType}`)
+export const users = async ({ usersType = 'all', page, perPage }: Payload) => {
+  const apiCall = await xpertymeApi(
+    `${apiRoot}/users?usersType=${usersType}&page=${page}&perPage=${perPage}`
+  )
   const res = await apiCall.get().res()
 
-  return (await res.json()) as definitions['User2'][]
+  return (await res.json()) as Response
 }

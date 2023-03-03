@@ -10,11 +10,12 @@ export const createEvent = async ({
   payload,
   calendarId
 }: {
-  // the types in the schema are wrong :/
+  // the types in the schema are wrong, we have to use unknown
   payload: unknown
   calendarId: string
 }) => {
-  const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events`)
-  const res = await apiCall.post(payload).res()
+  const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events/`)
+  const res = await apiCall.post({ form: payload }).res()
+
   return (await res.json()) as Response
 }

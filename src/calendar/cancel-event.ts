@@ -4,7 +4,7 @@ import { apiRoot } from '.'
 
 type Path =
   paths['/api/calendarManager/v0/nba/{calendar}/events/{personalCalendarEvent}/cancel']['post']
-type Payload = Path['parameters']['body']
+type Payload = Path['parameters']['body']['form']
 type Response = Path['responses']['200']['schema']
 
 export const cancelEvent = async ({
@@ -19,6 +19,6 @@ export const cancelEvent = async ({
   const apiCall = await xpertymeApi(
     `${apiRoot}/nba/${calendarId}/events/${eventId}/cancel`
   )
-  const res = await apiCall.post(payload).res()
+  const res = await apiCall.post({ form: payload }).res()
   return (await res.json()) as Response
 }

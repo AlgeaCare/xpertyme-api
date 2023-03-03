@@ -8,47 +8,82 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Event status filter (supported values: `all`, `finished`, `canceled`, `active`, `created`) */
-          status: string;
+          /** Event status filter */
+          eventStatus: "all" | "finished" | "canceled" | "active" | "created";
           /** Page number */
           page: number;
           /** Number of entries per page */
           perPage: number;
           /** Calendar event start date from (format yyyy-MM-dd) */
-          startDateFrom: string;
+          dateFrom: string;
           /** Calendar event start date to (format yyyy-MM-dd) */
-          startDateTo: string;
+          dateTo: string;
         };
       };
       responses: {
         /** Successful operation */
         200: {
           schema: {
-            /** @description Bank account id */
-            dateCreated?: string;
-            /** @description Bank account status */
-            startDate?: string;
-            /** @description Owner name */
-            endDate?: string;
-            /**
-             * @description Appointment format type
-             * @enum {integer}
-             */
-            formatType?: "1 - online" | "2 - offline" | "3 - phone";
-            /** @description BIC */
-            calendarEventId?: string;
-            /**
-             * @description Calendar event status
-             * @enum {integer}
-             */
-            status?:
-              | "0 - created"
-              | "1 - canceled"
-              | "2 - active"
-              | "3 - finished";
-            participant?: definitions["User"];
-            expert?: definitions["User"];
-          }[];
+            /** @description Total number of events found */
+            total?: string;
+            /** @description Page number */
+            page?: string;
+            /** @description Number of entries per page */
+            perPage?: string;
+            events?: {
+              /** @description Event id */
+              calendarEventId?: string;
+              /** @description Calendar event owner (expert) */
+              expert?: {
+                uuid?: string;
+                email?: string;
+                firstName?: string;
+                lastName?: string;
+                externalId?: string;
+                birthday?: string;
+              };
+              /** @description Calendar event participant (seeker) */
+              participant?: {
+                uuid?: string;
+                email?: string;
+                firstName?: string;
+                lastName?: string;
+                externalId?: string;
+                birthday?: string;
+              };
+              /** @description Event start date */
+              startDate?: string;
+              /** @description Event end date */
+              endDate?: string;
+              /** @description Date created */
+              dateCreated?: string;
+              /**
+               * @description Calendar event status
+               * @enum {integer}
+               */
+              status?: "created" | "active" | "canceled" | "finished";
+              /** @description Appointment type */
+              appointmentType?: {
+                /** @enum {string} */
+                type?: "global" | "individual";
+                /**
+                 * @description Appointment format type
+                 * @enum {string}
+                 */
+                formaType?: "onsite" | "video" | "phone";
+                /** @description Appointment type uuid */
+                uuid?: string;
+                /** @description Appointment type title */
+                title?: string;
+              };
+              /** @description Location UUID */
+              locationUuid?: string;
+              /** @description No show flag */
+              noShow?: boolean;
+              /** @description Notes */
+              notes?: boolean;
+            }[];
+          };
         };
         /** Bad request */
         400: unknown;
@@ -61,12 +96,24 @@ export interface paths {
         query: {
           /** Users type filter (supported values: `all`, `experts`, `clients`) */
           usersType: string;
+          /** Page number */
+          page: number;
+          /** Number of entries per page (max. 50) */
+          perPage: number;
         };
       };
       responses: {
         /** Successful operation */
         200: {
-          schema: definitions["User2"][];
+          schema: {
+            /** @description Total number of events found */
+            total?: string;
+            /** @description Page number */
+            page?: string;
+            /** @description Number of entries per page */
+            perPage?: string;
+            users?: definitions["User"][];
+          };
         };
         /** Bad request */
         400: unknown;
@@ -94,15 +141,6 @@ export interface paths {
 
 export interface definitions {
   User: {
-    uuid?: string;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    /** Format: date-time */
-    birthday?: string;
-    externalId?: string;
-  };
-  User2: {
     id?: number;
     uuid?: string;
     email?: string;
