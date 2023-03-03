@@ -15,7 +15,7 @@ export const createEvent = async ({
   calendarId: string
 }) => {
   const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events/`)
-  const res = await apiCall.post({ form: payload }).res()
+  const res = await apiCall.post({ payload }).res()
 
   return (await res.json()) as Response
 }
