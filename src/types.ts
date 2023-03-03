@@ -6,3 +6,5 @@ export type AccessTokenResponse = {
   scope: string
   token_type: 'Bearer'
 }
+
+export type XPTGender = 'male' | 'female' | 'undefined' | 'diverse'

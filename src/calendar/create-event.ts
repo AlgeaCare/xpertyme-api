@@ -1,21 +1,62 @@
 import { xpertymeApi } from '../api'
-import { paths } from '../../schemas/calendar/schema'
 import { apiRoot } from '.'
+import { XPTGender } from '../types'
 
-type Path = paths['/api/calendarManager/v0/{calendar}/events/']['post']
-// type Payload = Path['parameters']['body']
-type Response = Path['responses']['200']['schema']
+type Payload = {
+  eventType: 'personal'
+  userUuid: string
+  startDate: string
+  endDate: string
+  status: number
+  pause: number
+  isForFirstConsultation: boolean
+  visitReasonTemplate: string
+  noShow: boolean
+  genderCode: XPTGender
+  notes?: string
+  serviceTypeCodes: [string]
+}
+
+type Response = {
+  serviceTypeCodes: [string]
+  members: [
+    {
+      serviceTypeCode?: string
+      userUuid: string
+      id: number
+      invitation: {
+        startLink: string
+        cancelLink: string
+        firstName?: string
+        lastName?: string
+        birthday?: string
+        genderCode: string
+      }
+    }
+  ]
+  id: string
+  startDate: string
+  endDate: string
+  status: number
+  cancelMessage?: string
+  cancellationReason?: string
+  dateCanceled?: string
+  addressUuid?: string
+  canceledMember?: string
+  visitReason: { uuid: string; formatType: number }
+  notes?: string
+  noShow: boolean
+}
 
 export const createEvent = async ({
   payload,
   calendarId
 }: {
-  // the types in the schema are wrong, we have to use unknown
-  payload: unknown
+  payload: Payload
   calendarId: string
 }) => {
   const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events/`)
-  const res = await apiCall.post({ payload }).res()
+  const res = await apiCall.post(payload).res()
 
   return (await res.json()) as Response
 }
