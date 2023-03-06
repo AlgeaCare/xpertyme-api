@@ -19,6 +19,6 @@ export const cancelEvent = async ({
   const apiCall = await xpertymeApi(
     `${apiRoot}/nba/${calendarId}/events/${eventId}/cancel`
   )
-  const res = await apiCall.post({ form: payload }).res()
+  const res = await apiCall.post(payload).res()
   return (await res.json()) as Response
 }
