@@ -1,5 +1,6 @@
 import { envConfig } from './config'
 import wretch from 'wretch'
+import formUrlAddon from 'wretch/addons/formUrl'
 import { AccessTokenResponse } from './types'
 
 // so we don't keep requesting new tokens
@@ -9,7 +10,7 @@ let lastRequested: Date
 export const shouldGetNewToken = ({
   token,
   lastRequested,
-  tokenBuffer = 60
+  tokenBuffer = 90
 }: {
   token?: AccessTokenResponse
   lastRequested?: Date
@@ -43,6 +44,7 @@ export const getAccessToken = async () => {
     const tokenResponse = await wretch(
       `${xpertyme.apiDomain}/${xpertyme.tokenPath}`
     )
+      .addon(formUrlAddon)
       .auth(`Basic ${encodedKey()}`)
       .headers({
         'Content-Type': 'application/x-www-form-urlencoded',
