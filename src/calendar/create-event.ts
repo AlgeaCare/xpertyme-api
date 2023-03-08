@@ -15,6 +15,7 @@ type Payload = {
   genderCode: XPTGender
   notes?: string
   serviceTypeCodes: [string]
+  addressUuid?: string
 }
 
 type Response = {
