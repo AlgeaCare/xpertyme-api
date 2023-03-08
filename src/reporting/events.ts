@@ -18,5 +18,5 @@ export const events = async ({
   )
   const res = await apiCall.get().res()
 
-  return (await res.json()) as Response[]
+  return (await res.json()) as Response
 }
