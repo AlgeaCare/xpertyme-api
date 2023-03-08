@@ -1,7 +1,7 @@
 import { envConfig } from './config'
 import wretch from 'wretch'
 import { getAccessToken } from './access-token'
-import { retry } from 'wretch/middlewares'
+import { retry } from 'wretch-middlewares'
 
 export const xpertymeApi = async (endPoint: string) => {
   const { xpertyme } = envConfig()
@@ -11,11 +11,11 @@ export const xpertymeApi = async (endPoint: string) => {
   const url = `${xpertyme.apiDomain}/api/${endPoint}`
   console.log(url)
   return wretch(url)
-    .auth(`Bearer ${token}`)
-    .headers({ Accept: 'application/json' })
     .middlewares([
       retry({
         maxAttempts: 3
       })
     ])
+    .auth(`Bearer ${token}`)
+    .headers({ Accept: 'application/json' })
 }
