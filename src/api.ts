@@ -14,9 +14,18 @@ export const xpertymeApi = async (endPoint: string) => {
     .middlewares([
       retry({
         maxAttempts: 3,
-        onRetry: ({ error, url, options }) => {
+        onRetry: ({ url, options, response, error }) => {
+          console.error('================================')
           console.error(`ERROR in XPT API, will retry`)
-          console.error(JSON.stringify(error))
+          if (error) {
+            console.error('ERROR:')
+            console.error(JSON.stringify(error))
+          }
+          if (response) {
+            console.error('RESPONSE:')
+            console.error(JSON.stringify(response))
+          }
+
           return { url, options }
         }
       })
