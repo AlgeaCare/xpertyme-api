@@ -13,21 +13,8 @@ export const xpertymeApi = async (endPoint: string) => {
   return wretch(url)
     .middlewares([
       retry({
-        maxAttempts: 3,
-        onRetry: ({ url, options, response, error }) => {
-          console.error('================================')
-          console.error(`ERROR in XPT API, will retry`)
-          if (error) {
-            console.error('ERROR:')
-            console.error(JSON.stringify(error))
-          }
-          if (response) {
-            console.error('RESPONSE:')
-            console.error(JSON.stringify(response))
-          }
-
-          return { url, options }
-        }
+        maxAttempts: 5,
+        retryOnNetworkError: true
       })
     ])
     .auth(`Bearer ${token}`)
