@@ -53,12 +53,17 @@ type Response = {
 
 export const createEvent = async ({
   payload,
-  calendarId
+  calendarId,
+  withRetry = true
 }: {
   payload: Payload
   calendarId: string
+  withRetry?: boolean
 }) => {
-  const apiCall = await xpertymeApi(`${apiRoot}/${calendarId}/events/`)
+  const apiCall = await xpertymeApi(
+    `${apiRoot}/${calendarId}/events/`,
+    withRetry
+  )
   const res = await apiCall.post(payload).res()
 
   return (await res.json()) as Response
