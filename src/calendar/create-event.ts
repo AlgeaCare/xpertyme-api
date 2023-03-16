@@ -19,18 +19,18 @@ type Payload = {
 }
 
 type Response = {
-  serviceTypeCodes: [string]
+  serviceTypeCodes: string[]
   members: [
     {
-      serviceTypeCode?: string
+      serviceTypeCode: string
       userUuid: string
       id: number
       invitation: {
         startLink: string
         cancelLink: string
-        firstName?: string
-        lastName?: string
-        birthday?: string
+        firstName: string
+        lastName: string
+        birthday: string
         genderCode: string
       }
     }
@@ -39,14 +39,16 @@ type Response = {
   startDate: string
   endDate: string
   status: number
-  cancelMessage?: string
-  cancellationReason?: string
-  dateCanceled?: string
-  addressUuid?: string
-  canceledMember?: string
+  cancelMessage: string
+  cancellationReason: string
+  dateCanceled: string
+  addressUuid: string
+  canceledMember: string
   visitReason: { uuid: string; formatType: number }
-  notes?: string
+  notes: string
   noShow: boolean
+  expertId: string
+  calendarId: string
 }
 
 export const createEvent = async ({
