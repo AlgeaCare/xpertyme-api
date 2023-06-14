@@ -233,6 +233,24 @@ paths:
         - User Manager
       security:
         - UserManagerApiClient: []
+  /api/userManager/v0/user/findByExternalId:
+    get:
+      summary: Find user by ZID
+      parameters:
+        - name: externalId
+          in: query
+          required: true
+          description: the external id to look them up with
+          type: string
+      responses:
+        '200':
+          description: The user
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
   /api/userManager/v0/user/findByEmail:
     get:
       summary: Find user by E-mail
