@@ -3,6 +3,7 @@ import { deleteUser } from './delete'
 import { get } from './get'
 import { upgradeToExpert } from './upgrade-to-expert'
 import { findByEmail } from './find-by-email'
+import { findByZid } from './find-by-zid'
 
 export const apiRoot = 'userManager/v0'
 
@@ -12,5 +13,6 @@ export default {
   create,
   upgradeToExpert,
   deleteUser,
-  findByEmail
+  findByEmail,
+  findByZid
 }

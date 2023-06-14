@@ -185,6 +185,22 @@ export interface paths {
       };
     };
   };
+  "/api/userManager/v0/user/findByExternalId": {
+    get: {
+      parameters: {
+        query: {
+          /** the external id to look them up with */
+          externalId: string;
+        };
+      };
+      responses: {
+        /** The user */
+        200: {
+          schema: definitions["User"];
+        };
+      };
+    };
+  };
   "/api/userManager/v0/user/findByEmail": {
     get: {
       parameters: {
