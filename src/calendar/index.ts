@@ -1,6 +1,7 @@
 import { cancelEvent } from './cancel-event'
 import { confirmEvent } from './confirm-event'
 import { createEvent } from './create-event'
+import { timeslots } from './timeslots'
 
 export const apiRoot = 'calendarManager/v0'
 
@@ -8,5 +9,6 @@ export const apiRoot = 'calendarManager/v0'
 export default {
   createEvent,
   cancelEvent,
-  confirmEvent
+  confirmEvent,
+  timeslots
 }
