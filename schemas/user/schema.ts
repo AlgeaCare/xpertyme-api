@@ -163,6 +163,11 @@ export interface paths {
              *     false - system will do nothing (default: false)
              */
             passwordResetRequired?: boolean;
+            /**
+             * @description if `true` system will require additional actions to activate created user.
+             *     Flag `passwordResetRequired` will be ignored for migration flow
+             */
+            isMigration?: boolean;
             /** @description User password, the random password will be used if empty */
             password?: string;
             /** @description Country of residence (ISO 3166-1 alpha-2) */
@@ -185,27 +190,11 @@ export interface paths {
       };
     };
   };
-  "/api/userManager/v0/user/findByExternalId": {
-    get: {
-      parameters: {
-        query: {
-          /** the external id to look them up with */
-          externalId: string;
-        };
-      };
-      responses: {
-        /** The user */
-        200: {
-          schema: definitions["User"];
-        };
-      };
-    };
-  };
   "/api/userManager/v0/user/findByEmail": {
     get: {
       parameters: {
         query: {
-          /** E-mail */
+          /** E-mail of the user to find */
           email: string;
         };
       };
@@ -214,6 +203,48 @@ export interface paths {
         200: {
           schema: definitions["User"];
         };
+        /** Not found */
+        404: unknown;
+      };
+    };
+  };
+  "/api/userManager/v0/user/findByExternalId": {
+    /** If you want to use this endpoint, please contact XPERTyme. */
+    get: {
+      parameters: {
+        query: {
+          /** User external id */
+          externalId: string;
+        };
+      };
+      responses: {
+        /** Successful operation */
+        200: {
+          schema: definitions["User"];
+        };
+        /** Data source type mismatch */
+        403: unknown;
+        /** User not found */
+        404: unknown;
+      };
+    };
+  };
+  "/api/userManager/v0/user/exists": {
+    /** If you want to use this endpoint, please contact XPERTyme. */
+    get: {
+      parameters: {
+        query: {
+          /** User email */
+          email: string;
+        };
+      };
+      responses: {
+        /** User exists */
+        200: unknown;
+        /** Data source type mismatch */
+        403: unknown;
+        /** User not found */
+        404: unknown;
       };
     };
   };
@@ -229,8 +260,6 @@ export interface paths {
         /** Returned when successful */
         200: {
           schema: {
-            /** @description email address */
-            email?: string;
             /** @description Unique number of expert user */
             uuid?: string;
             /** @description External ID, can be used to identify users by external applications */
@@ -324,7 +353,7 @@ export interface paths {
     };
   };
   "/api/userManager/v0/user/{uuid}/baseInformation": {
-    post: {
+    patch: {
       parameters: {
         path: {
           /** User UUID */
@@ -345,6 +374,14 @@ export interface paths {
              *     can be used to identify users by external applications
              */
             externalId?: string;
+            /** @description User's email */
+            email?: string;
+            /** @description User's phone */
+            phone?: string;
+            /** @description User's gender code */
+            genderCode?: string;
+            /** @description User's birthday (YYYY-MM-DD) */
+            birthday?: string;
           };
         };
       };
