@@ -209,6 +209,11 @@ paths:
                   true - the system send out a email to the user to reset/change the password,
                       false - system will do nothing (default: false)
                 type: boolean
+              isMigration:
+                description: |-
+                  if `true` system will require additional actions to activate created user.
+                      Flag `passwordResetRequired` will be ignored for migration flow
+                type: boolean
               password:
                 description: User password, the random password will be used if empty
                 type: string
@@ -233,24 +238,6 @@ paths:
         - User Manager
       security:
         - UserManagerApiClient: []
-  /api/userManager/v0/user/findByExternalId:
-    get:
-      summary: Find user by ZID
-      parameters:
-        - name: externalId
-          in: query
-          required: true
-          description: the external id to look them up with
-          type: string
-      responses:
-        '200':
-          description: The user
-          schema:
-            $ref: '#/definitions/User'
-      tags:
-        - User Manager
-      security:
-        - UserManagerApiClient: []
   /api/userManager/v0/user/findByEmail:
     get:
       summary: Find user by E-mail
@@ -258,13 +245,59 @@ paths:
         - name: email
           in: query
           required: true
-          description: E-mail
+          description: E-mail of the user to find
           type: string
       responses:
         '200':
           description: Successful operation
           schema:
             $ref: '#/definitions/User'
+        '404':
+          description: Not found
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/findByExternalId:
+    get:
+      summary: Find user by external id
+      description: If you want to use this endpoint, please contact XPERTyme.
+      parameters:
+        - name: externalId
+          in: query
+          required: true
+          description: User external id
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '403':
+          description: Data source type mismatch
+        '404':
+          description: User not found
+      tags:
+        - User Manager
+      security:
+        - UserManagerApiClient: []
+  /api/userManager/v0/user/exists:
+    get:
+      summary: Check whether the user exists
+      description: If you want to use this endpoint, please contact XPERTyme.
+      parameters:
+        - name: email
+          in: query
+          required: true
+          description: User email
+          type: string
+      responses:
+        '200':
+          description: User exists
+        '403':
+          description: Data source type mismatch
+        '404':
+          description: User not found
       tags:
         - User Manager
       security:
@@ -283,9 +316,6 @@ paths:
           description: Returned when successful
           schema:
             properties:
-              email:
-                description: email address
-                type: string
               uuid:
                 description: Unique number of expert user
                 type: string
@@ -420,7 +450,7 @@ paths:
       security:
         - UserManagerApiClient: []
   /api/userManager/v0/user/{uuid}/baseInformation:
-    post:
+    patch:
       summary: Update base information
       parameters:
         - name: uuid
@@ -448,6 +478,18 @@ paths:
                 description: |-
                   Any external id which will be added to any user result call,
                       can be used to identify users by external applications
+                type: string
+              email:
+                description: User's email
+                type: string
+              phone:
+                description: User's phone
+                type: string
+              genderCode:
+                description: User's gender code
+                type: string
+              birthday:
+                description: User's birthday (YYYY-MM-DD)
                 type: string
             type: object
       responses:
