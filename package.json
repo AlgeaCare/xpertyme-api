@@ -1,6 +1,6 @@
 {
   "name": "@algea_care/xpertyme-api",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Just a little lib for the xpertyme api",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -38,9 +38,9 @@
   },
   "dependencies": {
     "dotenv": "^16.x.x",
-    "node-fetch": "^2.x.x",
+    "node-fetch": "^2.7.0",
     "openapi-typescript": "^5.x.x",
-    "wretch": "^1.7.6",
+    "wretch": "^1.7.10",
     "wretch-middlewares": "^0.1.13"
   },
   "volta": {

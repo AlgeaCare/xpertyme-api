@@ -1,7 +1,12 @@
 import { envConfig } from './config'
 import wretch from 'wretch'
+import * as nodeFetch from 'node-fetch'
 import { getAccessToken } from './access-token'
 import { retry } from 'wretch-middlewares'
+
+wretch().polyfills({
+  fetch: nodeFetch
+})
 
 export const xpertymeApi = async (endPoint: string, withRetry = true) => {
   const { xpertyme } = envConfig()
