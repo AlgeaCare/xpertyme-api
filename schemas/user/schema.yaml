@@ -460,13 +460,7 @@ paths:
           type: string
         - name: body
           in: body
-          description: |-
-            Parameters `firstName` and `lastName` are mandatory, they always need to be set
-                and will be overwritten by every API call
           schema:
-            required:
-              - firstName
-              - lastName
             properties:
               firstName:
                 description: User's first name

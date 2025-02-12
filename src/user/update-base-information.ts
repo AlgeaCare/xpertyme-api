@@ -21,8 +21,8 @@ export const updateBaseInformation = async ({
 }: {
   uuid: string
   withRetry?: boolean
-  firstName: string
-  lastName: string
+  firstName?: string
+  lastName?: string
   externalId: string
   birthday?: string
   email?: string
