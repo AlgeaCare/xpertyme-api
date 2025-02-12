@@ -360,15 +360,11 @@ export interface paths {
           uuid: string;
         };
         body: {
-          /**
-           * Parameters `firstName` and `lastName` are mandatory, they always need to be set
-           *     and will be overwritten by every API call
-           */
           body?: {
             /** @description User's first name */
-            firstName: string;
+            firstName?: string;
             /** @description User's last name */
-            lastName: string;
+            lastName?: string;
             /**
              * @description Any external id which will be added to any user result call,
              *     can be used to identify users by external applications

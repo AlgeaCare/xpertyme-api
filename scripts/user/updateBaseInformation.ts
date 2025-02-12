@@ -6,8 +6,8 @@ const run = async () => {
   const uuid = '3391a7a5-7b40-455a-90a3-536c4f2954b4'
   const user = await updateBaseInformation({
     uuid,
-    firstName: 'Gareth',
-    lastName: 'Rocks',
+    // firstName: 'newName',
+    // lastName: 'Rocks',
     externalId: 'Z68358427901117',
     email: 'something-new@random.com',
     phone: '0000000000',
