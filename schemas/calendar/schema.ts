@@ -386,7 +386,7 @@ export interface paths {
           /** Organization UUID */
           organizationUuid?: string;
           /** Address UUID */
-          addressUuid?: string;
+          location_uuid?: string;
           /** Spoken language ids */
           "spokenLanguages[]"?: number;
           /** Country (ISO 3166-1 alpha-2) */
