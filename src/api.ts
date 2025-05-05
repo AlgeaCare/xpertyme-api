@@ -31,6 +31,6 @@ export const xpertymeApi = async (endPoint: string, withRetry = true) => {
       })
     ])
   }
-
+  console.log(url);
   return request
 }
