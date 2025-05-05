@@ -11,11 +11,7 @@ export const xpertymeApi = async (endPoint: string, withRetry = true) => {
   const { xpertyme } = envConfig()
 
   // get the access token for each request to the API
-  const start = performance.now();
   const token = await getAccessToken()
-  const end = performance.now();
-  const durationInSeconds = (end - start) / 1000;
-  console.log(`Function getAccessToken took ${durationInSeconds.toFixed(3)} seconds.`);
   const url = `${xpertyme.apiDomain}/${endPoint}`
   
   // Create a new wretch instance with the base URL
