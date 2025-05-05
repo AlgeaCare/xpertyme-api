@@ -8,3 +8,13 @@ export type AccessTokenResponse = {
 }
 
 export type XPTGender = 'male' | 'female' | 'undefined' | 'diverse'
+
+export const XPTAppointment = {
+  THC_ON_SITE : 'thc_on_site',
+  THC_VIDEO_EG : 'thc_video_eg',
+  THC_VIDEO : 'thc_video',
+  CBD_VIDEO : 'cbd_video',
+  NO_APPOINTMENT : 'no_appointment',
+  UNMAPPED_APPOINTMENT : 'unmapped_appointment',
+}
+export type XPTAppointmentType = keyof typeof XPTAppointment

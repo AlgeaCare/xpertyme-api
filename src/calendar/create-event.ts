@@ -1,5 +1,5 @@
 import { xpertymeApi } from '../api'
-import { apiRoot } from '.'
+import { apiRoot } from './constants'
 import { XPTGender } from '../types'
 
 type Payload = {
