@@ -1,6 +1,10 @@
 import { envConfig } from './config'
 import wretch from 'wretch'
+import fetch from 'node-fetch'
 import { AccessTokenResponse } from './types'
+
+// Configure wretch to use node-fetch
+const w = wretch().polyfills({ fetch })
 
 // so we don't keep requesting new tokens
 let token: AccessTokenResponse
@@ -40,19 +44,18 @@ export const getAccessToken = async () => {
     // set when we last requested to now
     lastRequested = new Date()
 
-    const tokenResponse = await wretch(
-      `${xpertyme.apiDomain}/${xpertyme.tokenPath}`
-    )
+    const tokenResponse = await w
+      .url(`${xpertyme.apiDomain}/${xpertyme.tokenPath}`)
       .auth(`Basic ${encodedKey()}`)
       .headers({
         'Content-Type': 'application/x-www-form-urlencoded',
-        Accept: '*/*'
+        'Accept': '*/*'
       })
       .formUrl({
         grant_type: 'client_credentials'
       })
       .post()
-      .res(async (r) => (await r.json()) as AccessTokenResponse)
+      .json<AccessTokenResponse>()
     if (!tokenResponse.access_token) {
       throw new Error('could not get the access token from expertyme')
     }

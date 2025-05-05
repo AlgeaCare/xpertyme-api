@@ -1,0 +1,1 @@
+export const apiRoot = 'calendarManager/v0'
