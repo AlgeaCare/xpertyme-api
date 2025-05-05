@@ -1,6 +1,6 @@
 import { xpertymeApi } from '../api'
 import { paths } from '../../schemas/calendar/schema'
-import { apiRoot } from '.'
+import { apiRoot } from './constants'
 
 type Path =
   paths['/api/calendarManager/v0/nba/{calendar}/events/{personalCalendarEvent}/cancel']['post']

@@ -385,8 +385,8 @@ export interface paths {
           "categories[]": number;
           /** Organization UUID */
           organizationUuid?: string;
-          /** Location UUID */
-          location_uuid?: string;
+          /** Address UUID */
+          addressUuid?: string;
           /** Spoken language ids */
           "spokenLanguages[]"?: number;
           /** Country (ISO 3166-1 alpha-2) */
