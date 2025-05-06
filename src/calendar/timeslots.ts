@@ -45,7 +45,8 @@ export const fetchTimeslots = async ({
   dateEnd,
   serviceType,
   category,
-  expertId
+  expertId,
+  location_uuid
   }: {
   withRetry?: boolean
   visitingReasonTemplate: string
@@ -54,13 +55,18 @@ export const fetchTimeslots = async ({
   serviceType: string
   // 1 for cbd 2 for thc for prod
   // 19 or 12 for staging
-  category: number,
+  category?: number,
   expertId?: string
+  location_uuid?: string
 }) => {
+  const categories = category ? `&categories[]=${category}` : '';
+  const expert = expertId ? `${expertId}/` : '';
+  const location = location_uuid ? `&location_uuid=${location_uuid}` : '';
+
   const apiCall = await xpertymeApi(
-    `api/calendarManager/v0/nba/${expertId ? expertId+'/' : ''}timeslots?dateStart=${encodeURI(
+    `api/calendarManager/v0/nba/${expert}timeslots?dateStart=${encodeURI(
       dateStart.toISOString()
-    )}&dateEnd=${dateEnd.toISOString()}&serviceType=${serviceType}&categories[]=${category}&visitReasonTemplate=${visitingReasonTemplate}`,
+    )}&dateEnd=${dateEnd.toISOString()}&serviceType=${serviceType}${categories}&visitReasonTemplate=${visitingReasonTemplate}${location}`,
     withRetry
   )
   const res = await apiCall.get().res()

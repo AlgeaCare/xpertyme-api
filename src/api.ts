@@ -13,7 +13,7 @@ export const xpertymeApi = async (endPoint: string, withRetry = true) => {
   // get the access token for each request to the API
   const token = await getAccessToken()
   const url = `${xpertyme.apiDomain}/${endPoint}`
-  
+  console.log('url', url);
   // Create a new wretch instance with the base URL
   let request = w.url(url)
     .auth(`Bearer ${token}`)
@@ -31,6 +31,5 @@ export const xpertymeApi = async (endPoint: string, withRetry = true) => {
       })
     ])
   }
-  console.log(url);
   return request
 }
