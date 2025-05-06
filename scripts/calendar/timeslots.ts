@@ -5,11 +5,12 @@ const run = async () => {
   const start = performance.now();
 
   const slotsWithoutExpert = await fetchTimeslots({
-    category: 19,
+    category: undefined,
     dateEnd: new Date('2025-7-28'),
     dateStart: new Date('2025-5-5'),
     serviceType: 'statutory',
-    visitingReasonTemplate: 'faba55be-a9f8-489d-92be-d4a21208b4f3'
+    visitingReasonTemplate: 'faba55be-a9f8-489d-92be-d4a21208b4f3',
+    location_uuid: '178e747b-9efe-4f2f-bb3b-accd26ea6387'
   });
   const end = performance.now();
   const durationInSeconds = (end - start) / 1000;
