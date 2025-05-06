@@ -14,7 +14,7 @@ const run = async () => {
   });
   const end = performance.now();
   const durationInSeconds = (end - start) / 1000;
-  console.log(slotsWithoutExpert)
+  //console.log(slotsWithoutExpert)
   console.log(`Function took ${durationInSeconds.toFixed(3)} seconds.`);
 }
 
