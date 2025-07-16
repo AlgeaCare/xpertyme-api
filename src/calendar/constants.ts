@@ -1,1 +1,1 @@
-export const apiRoot = 'calendarManager/v0'
+export const apiRoot = 'api/calendarManager/v0'
